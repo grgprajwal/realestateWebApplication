@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:realstate/Utility/realestate_preferences.dart';
 import 'package:realstate/View/Widgets/Admin/AdminNavigationBar.dart';
 import 'package:realstate/View/Widgets/Admin/admin_dashboard_body.dart';
 import 'package:realstate/View/centered_view.dart';
@@ -14,6 +15,19 @@ class AdminPanel extends StatefulWidget {
 
 class _AdminPanelState extends State<AdminPanel> {
 
+  String _username;
+
+  _AdminPanelState(){
+    _getUsername().then((val) => setState(() {
+      _username = val;
+    }));
+
+  }
+
+  Future<String> _getUsername() async {
+    return await RealEstatePreferences.getUserName();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +39,7 @@ class _AdminPanelState extends State<AdminPanel> {
           children: [CenteredView(
               child: Column(
                 children: <Widget>[
-                  AdminNavigationBar(username: widget.username),
+                  AdminNavigationBar(username: _username),
                   // Scrollbar(child:  adminDashboard())
                   adminDashboard()
 

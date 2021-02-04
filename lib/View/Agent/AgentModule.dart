@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:realstate/Model/User.dart';
+import 'package:realstate/Repository/AgentService.dart';
+import 'package:realstate/Utility/realestate_preferences.dart';
 import 'package:realstate/View/Widgets/Admin/AdminNavigationBar.dart';
 import 'package:realstate/company_constant.dart';
 
@@ -15,6 +17,29 @@ class _AgentListState extends State<AgentList> {
   var dts;
   int _rowPerPage = PaginatedDataTable.defaultRowsPerPage;
   bool sortType = false;
+  String _username;
+  AgentService _agentService;
+  List<User> mainusers;
+
+  _AgentListState() {
+    _agentService = new AgentService();
+    _getUsername().then((val) =>
+        setState(() {
+          _username = val;
+        }));
+
+    _agentService.getAllAgents().then((value) {
+      setState(){
+        mainusers = value;
+      }
+
+    });
+
+  }
+
+  Future<String> _getUsername() async {
+    return await RealEstatePreferences.getUserName();
+  }
 
   @override
   void didChangeDependencies() {
@@ -37,7 +62,7 @@ class _AgentListState extends State<AgentList> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      AdminNavigationBar(username: 'admin'),
+                      AdminNavigationBar(username: _username),
                       Padding(
                         padding: EdgeInsets.fromLTRB(50, 60, 50, 0),
                         child: SizedBox(
@@ -49,7 +74,9 @@ class _AgentListState extends State<AgentList> {
                         ),
                       ),
                       SingleChildScrollView(
-                        child: PaginatedDataTable(
+                        child:
+
+                        PaginatedDataTable(
 
                           header: Container(
                             margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -61,19 +88,19 @@ class _AgentListState extends State<AgentList> {
                               children: [
                                 Expanded(
                                     child: TextField(
-                                  decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                          icon: Icon(Icons.search),
-                                          onPressed: () {
-                                           dts.searchData(_searchContent.text.toString());
-                                          })
-                                  ),
-                                  controller: _searchContent,
-                                  onChanged: (value) {
-                                    dts.searchData(value);
-                                  },
+                                      decoration: InputDecoration(
+                                          suffixIcon: IconButton(
+                                              icon: Icon(Icons.search),
+                                              onPressed: () {
+                                                dts.searchData(_searchContent.text.toString());
+                                              })
+                                      ),
+                                      controller: _searchContent,
+                                      onChanged: (value) {
+                                        dts.searchData(value);
+                                      },
 
-                                )),
+                                    )),
                                 SizedBox(
                                   width: screenSize.size.width * .2,
                                 ),
@@ -95,6 +122,71 @@ class _AgentListState extends State<AgentList> {
                             });
                           },
                         ),
+
+
+                        // FutureBuilder(
+                        //   future: _agentService.getAllAgents(),
+                        //   builder: (context, snapshot) {
+                        //     switch (snapshot.connectionState) {
+                        //       case ConnectionState.none:
+                        //         return new CircularProgressIndicator();
+                        //       case ConnectionState.done:
+                        //           return PaginatedDataTable(
+                        //
+                        //             header: Container(
+                        //               margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        //               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        //               height: 100,
+                        //               color: Colors.white,
+                        //               child: Row(
+                        //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //                 children: [
+                        //                   Expanded(
+                        //                       child: TextField(
+                        //                         decoration: InputDecoration(
+                        //                             suffixIcon: IconButton(
+                        //                                 icon: Icon(Icons.search),
+                        //                                 onPressed: () {
+                        //                                   dts.searchData(_searchContent.text.toString());
+                        //                                 })
+                        //                         ),
+                        //                         controller: _searchContent,
+                        //                         onChanged: (value) {
+                        //                           dts.searchData(value);
+                        //                         },
+                        //
+                        //                       )),
+                        //                   SizedBox(
+                        //                     width: screenSize.size.width * .2,
+                        //                   ),
+                        //                   RaisedButton.icon(
+                        //                       onPressed: () {
+                        //                         Navigator.pushNamed(context, AddAgentPage);
+                        //
+                        //                       },
+                        //                       icon: Icon(Icons.add),
+                        //                       label: Text("ADD AGENT"))
+                        //                 ],
+                        //               ),
+                        //             ),
+                        //             columns: _headers(),
+                        //             source: dts,
+                        //             onRowsPerPageChanged: (r) {
+                        //               setState(() {
+                        //                 _rowPerPage = r;
+                        //               });
+                        //             },
+                        //           );
+                        //       default:
+                        //         return new CircularProgressIndicator();
+                        //
+                        //     }
+                        //   },
+                        // ),
+
+
+
+
                       )
                     ],
                   ),
@@ -103,6 +195,7 @@ class _AgentListState extends State<AgentList> {
         )
     );
   }
+
 
   List<DataColumn> _headers() {
     return <DataColumn>[
@@ -159,29 +252,49 @@ class _AgentListState extends State<AgentList> {
 class DTS extends DataTableSource {
   List<User> _ourData;
   List<User> _backUp;
-  int size ;
-  final BuildContext context;
+  int size;
 
-  DTS(this.context){
-    _ourData = TestFile.getTestUsers();
-    _backUp = TestFile.getTestUsers();
-    size = TestFile.getTestUsers().length;
+  final BuildContext context;
+  AgentService _agentService = new AgentService();
+
+  void setList() async {
+    _ourData = await _agentService.getAllAgents();
+    if (_ourData == null) {
+      size = 0;
+    } else {
+      size = _ourData.length;
+    }
+
+    print('This is our data $_ourData');
+    notifyListeners();
+
   }
 
-  void searchData(String searchCharacter){
+
+  DTS(this.context ) {
+    print('length');
+    // size = _ourData.length;
+
+    _ourData = TestFile.getTestUsers();
+    size = _ourData.length;
+
+    setList();
+  }
+
+
+  void searchData(String searchCharacter) {
     _ourData.clear();
-    if(searchCharacter == '' || searchCharacter == null){
+    if (searchCharacter == '' || searchCharacter == null) {
       _ourData = _backUp;
-    }else{
+    } else {
       List<User> temp;
       _backUp.forEach((e) {
-        if(e.firstName.toUpperCase().contains(searchCharacter.toUpperCase())){
+        if (e.firstName.toUpperCase().contains(searchCharacter.toUpperCase())) {
           print('in here ' + e.firstName);
-            temp[0] = e;
+          temp[0] = e;
         }
 
         _ourData = temp;
-
       });
     }
 
@@ -189,31 +302,33 @@ class DTS extends DataTableSource {
     notifyListeners();
   }
 
-  void sortTable(int colIndex, bool asc){
+  void sortTable(int colIndex, bool asc) {
     print(_ourData[0].firstName);
-    print('sort table is called $colIndex' ) ;
+    print('sort table is called $colIndex');
     print(' $asc');
-    if(colIndex == 1){
-      if(asc){
-        _ourData.sort((a,b) => a.firstName.toUpperCase().compareTo(b.firstName.toUpperCase()));
-      }else{
-        _ourData.sort((a,b) => b.firstName.toUpperCase().compareTo(a.firstName.toUpperCase()));
-
+    if (colIndex == 1) {
+      if (asc) {
+        _ourData.sort((a, b) =>
+            a.firstName.toUpperCase().compareTo(b.firstName.toUpperCase()));
+      } else {
+        _ourData.sort((a, b) =>
+            b.firstName.toUpperCase().compareTo(a.firstName.toUpperCase()));
       }
-
-    }else if(colIndex == 2){
-      if(asc){
-        _ourData.sort((a,b) => a.mobile.toUpperCase().compareTo(b.mobile.toUpperCase()));
-      }else{
-        _ourData.sort((a,b) => b.mobile.toUpperCase().compareTo(a.mobile.toUpperCase()));
-
+    } else if (colIndex == 2) {
+      if (asc) {
+        _ourData.sort((a, b) =>
+            a.mobile.toUpperCase().compareTo(b.mobile.toUpperCase()));
+      } else {
+        _ourData.sort((a, b) =>
+            b.mobile.toUpperCase().compareTo(a.mobile.toUpperCase()));
       }
-    }else if(colIndex == 3){
-      if(asc){
-        _ourData.sort((a,b) => a.email.toUpperCase().compareTo(b.email.toUpperCase()));
-      }else{
-        _ourData.sort((a,b) => b.email.toUpperCase().compareTo(a.email.toUpperCase()));
-
+    } else if (colIndex == 3) {
+      if (asc) {
+        _ourData.sort((a, b) =>
+            a.email.toUpperCase().compareTo(b.email.toUpperCase()));
+      } else {
+        _ourData.sort((a, b) =>
+            b.email.toUpperCase().compareTo(a.email.toUpperCase()));
       }
     }
     print('After sort sort table is ' + _ourData[0].firstName);
@@ -223,7 +338,10 @@ class DTS extends DataTableSource {
   @override
   DataRow getRow(int index) {
     assert(index >= 0);
+
+
     if (index >= size) return null;
+
     final users = _ourData[index];
 
     return DataRow.byIndex(index: index, cells: [
@@ -231,10 +349,10 @@ class DTS extends DataTableSource {
       DataCell(Text(users.firstName)),
       DataCell(Text(users.mobile)),
       DataCell(Text(users.email)),
-      DataCell(Text(users.status)),
+      DataCell(Text(users.isVerified.toString())),
       DataCell(Icon(
-        Icons.edit,semanticLabel: 'Edit',
-      ) ,onTap: (){
+        Icons.edit, semanticLabel: 'Edit',
+      ), onTap: () {
         Navigator.pushNamed(context, EditAgentPage, arguments: index);
       })
     ]);

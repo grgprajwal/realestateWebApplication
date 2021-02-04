@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:realstate/Model/Property.dart';
+import 'package:realstate/Utility/realestate_preferences.dart';
 import 'package:realstate/View/Widgets/Agent/AgentNavigationBar.dart';
 import 'package:realstate/routing_constants.dart';
 
@@ -24,6 +25,19 @@ class _AddPropertyState extends State<AddProperty> {
   String statusValue = '- Select an option -';
   File f;
 
+  String _username;
+
+  _AddPropertyState(){
+    _getUsername().then((val) => setState(() {
+      _username = val;
+    }));
+
+  }
+
+  Future<String> _getUsername() async {
+    return await RealEstatePreferences.getUserName();
+  }
+
 
 
   @override
@@ -42,7 +56,7 @@ class _AddPropertyState extends State<AddProperty> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              AgentNavigationBar(username: 'prajwal'),
+              AgentNavigationBar(username: _username),
               Padding(
                 padding: EdgeInsets.fromLTRB(50, 60, 50, 0),
                 child: SizedBox(
@@ -364,6 +378,16 @@ class _AddPropertyState extends State<AddProperty> {
                               },
                             )
                           ),
+                          // SizedBox(
+                          //     width: screenSize.size.width * (0.24),
+                          //     child: Container(
+                          //       decoration: BoxDecoration(
+                          //         image: DecorationImage(
+                          //           image: Image( image: f),
+                          //         )
+                          //       ),
+                          //     ),
+                          // ),
 
                           SizedBox(
                             height: 60,
@@ -414,10 +438,11 @@ class _AddPropertyState extends State<AddProperty> {
         f = file;
         print('done');
         print(f.toString());
-
       });
     });
 
   }
+
+
 
 }

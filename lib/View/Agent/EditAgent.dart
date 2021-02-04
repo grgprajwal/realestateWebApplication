@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:realstate/HelperClass.dart';
 import 'package:realstate/Model/User.dart';
+import 'package:realstate/Utility/realestate_preferences.dart';
 import 'package:realstate/View/Widgets/Admin/AdminNavigationBar.dart';
 import 'package:realstate/View/centered_view.dart';
 
@@ -24,6 +25,20 @@ class EditAgent extends StatefulWidget {
 class _EditAgentState extends State<EditAgent> {
   final _addAgentKey = GlobalKey<FormState>();
 
+  String _username;
+
+  _EditAgentState(){
+    _getUsername().then((val) => setState(() {
+      _username = val;
+    }));
+
+  }
+
+  Future<String> _getUsername() async {
+    return await RealEstatePreferences.getUserName();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context);
@@ -42,7 +57,7 @@ class _EditAgentState extends State<EditAgent> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  AdminNavigationBar(username: 'admin'),
+                  AdminNavigationBar(username: _username),
                   Padding(
                     padding: EdgeInsets.fromLTRB(50, 60, 50, 0),
                     child: SizedBox(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:realstate/Controller/hover_extension.dart';
+import 'package:realstate/Utility/realestate_preferences.dart';
 
 import '../../../company_constant.dart';
 import '../../../routing_constants.dart';
@@ -49,6 +50,8 @@ class AgentNavigationBar extends StatelessWidget {
 
                 ),
                 TextButton(onPressed: (){
+                  RealEstatePreferences.clearAllPreferences();
+
                   Navigator.pushNamed(context, LoginHomePage );
                 },
                   child: Text('Logout', style: TextStyle(color: Colors.black),

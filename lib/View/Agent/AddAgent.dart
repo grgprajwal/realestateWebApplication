@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:realstate/HelperClass.dart';
 import 'package:realstate/Model/User.dart';
+import 'package:realstate/Utility/realestate_preferences.dart';
 import 'package:realstate/View/Widgets/Admin/AdminNavigationBar.dart';
 import 'package:realstate/View/Widgets/Agent/AgentNavigationBar.dart';
 import 'package:realstate/View/centered_view.dart';
@@ -18,6 +19,20 @@ class AddAgent extends StatefulWidget {
 class _AddAgentState extends State<AddAgent> {
   final _addAgentKey = GlobalKey<FormState>();
   User _newUser = User();
+
+  String _username;
+
+  _AddAgentState(){
+    _getUsername().then((val) => setState(() {
+      _username = val;
+    }));
+
+  }
+
+  Future<String> _getUsername() async {
+    return await RealEstatePreferences.getUserName();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +51,7 @@ class _AddAgentState extends State<AddAgent> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              AdminNavigationBar(username: 'admin'),
+              AdminNavigationBar(username: _username),
               Padding(
                 padding: EdgeInsets.fromLTRB(50, 60, 50, 0),
                 child: SizedBox(

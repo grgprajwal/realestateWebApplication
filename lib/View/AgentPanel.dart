@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:realstate/Utility/realestate_preferences.dart';
 import 'package:realstate/View/Widgets/Admin/AdminNavigationBar.dart';
 import 'package:realstate/View/Widgets/Admin/admin_dashboard_body.dart';
 import 'package:realstate/View/Widgets/Agent/AgentNavigationBar.dart';
@@ -16,6 +17,19 @@ class AgentPanel extends StatefulWidget {
 
 class _AdminPanelState extends State<AgentPanel> {
 
+  String _username;
+
+  _AdminPanelState(){
+    _getUsername().then((val) => setState(() {
+      _username = val;
+    }));
+
+  }
+
+  Future<String> _getUsername() async {
+    return await RealEstatePreferences.getUserName();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +41,7 @@ class _AdminPanelState extends State<AgentPanel> {
           children: [CenteredView(
               child: Column(
                 children: <Widget>[
-                  AgentNavigationBar(username: widget.username),
+                  AgentNavigationBar(username: _username),
                   // Scrollbar(child:  adminDashboard())
                   agentDashboard()
 

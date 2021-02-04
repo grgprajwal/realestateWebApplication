@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:realstate/Model/Owner.dart';
+import 'package:realstate/Utility/realestate_preferences.dart';
 import 'package:realstate/View/Widgets/Admin/AdminNavigationBar.dart';
 import 'package:realstate/View/Widgets/Agent/AgentNavigationBar.dart';
 import 'package:realstate/routing_constants.dart';
@@ -18,6 +19,19 @@ class AddOwner extends StatefulWidget {
 class _AddOwnerState extends State<AddOwner> {
   final _addAgentKey = GlobalKey<FormState>();
   Owner _newOwner = Owner();
+
+  String _username;
+
+  _AddOwnerState(){
+    _getUsername().then((val) => setState(() {
+      _username = val;
+    }));
+
+  }
+
+  Future<String> _getUsername() async {
+    return await RealEstatePreferences.getUserName();
+  }
 
 
   @override
@@ -37,13 +51,13 @@ class _AddOwnerState extends State<AddOwner> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  AgentNavigationBar(username: 'prajwal'),
+                  AgentNavigationBar(username: _username),
                   Padding(
                     padding: EdgeInsets.fromLTRB(50, 60, 50, 0),
                     child: SizedBox(
                       height: 80,
                       child: Text(
-                        'Add Agent',
+                        'Add Owner',
                         style: TextStyle(fontSize: 26),
                       ),
                     ),

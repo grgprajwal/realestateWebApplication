@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 
 class HelperClass{
@@ -17,6 +20,9 @@ class HelperClass{
     );
   }
 
+  static String generateSHA256(String input) {
+    return sha256.convert(utf8.encode(input)).toString();
+  }
 
 
 

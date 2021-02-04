@@ -3,6 +3,14 @@ import 'dart:convert';
 import 'package:realstate/Model/Address.dart';
 import 'package:realstate/Model/MainData.dart';
 
+
+List<User> userListFromJson(String str) => List<User>.from(json.decode(str).map((x) => User.fromJson(x)));
+User userFromJson(String str) => User.fromJson(json.decode(str));
+String userToJson(User data) => json.encode(data.toJson());
+
+
+
+
 class User extends MainData{
 
   String email;
@@ -20,11 +28,12 @@ class User extends MainData{
   Address address1;
   Address address2;
 
-  User userFromJson(String str) => User.fromJson(json.decode(str));
 
-  String userToJson(User data) => json.encode(data.toJson());
 
-  User({int Id, String email, String mobile, String password, String firstName, String middleName, String lastName, DateTime createdDate, String status, bool isVerified, String role, Address address1, Address address2}) : super(id: Id){
+
+
+  User({int Id, String email, String mobile, String password, String firstName, String middleName, String lastName,
+    DateTime createdDate, String status, bool isVerified, String role, Address address1, Address address2}) : super(id: Id){
 
 
     this.email = email;
@@ -54,6 +63,7 @@ class User extends MainData{
     isVerified: json["is_login_verified"] == null ? null : json["is_login_verified"],
     role: json["role"] == null ? null : json["role"],
   );
+
 
   Map<String, dynamic> toJson() => {
     "id": id == null ? null : id,

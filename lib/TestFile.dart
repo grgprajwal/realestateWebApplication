@@ -7,17 +7,22 @@ import 'Model/User.dart';
 class TestFile {
 
 
+//   static List<User> getTestUsers(){
+//     List<User> testUsers = [
+//       User(Id: 1, firstName: 'Aaron',email: 'aaron@gmail.com',password: '123456', mobile: '26262626', status: 'Active', address1: new Address(streetName: 'thomastown',city: 'thom', state: 'vic' , postCode: '3074')),
+//
+//       User(Id: 2, firstName: 'Aron',email: 'arron@gmail.com',password: '123456', mobile: '123456798', status: 'Active', address1: new Address(streetName: 'sydney road',city: 'brunswick', state: 'vic' , postCode: '3011')),
+//       User(Id: 3, firstName: 'Baron',email: 'baron@gmail.com',password: '123456', mobile: '159573456', status: 'Active', address1: new Address(streetName: 'tottenham',city: 'tottenham', state: 'vic' , postCode: '2589')),
+//       User(Id: 4, firstName: 'Maron',email: 'maron@gmail.com',password: '123456', mobile: '46579813', status: 'Inactive', address1: new Address(streetName: 'flinders',city: 'CBD', state: 'vic' , postCode: '3626')),
+//
+//     ];
+//     return testUsers;
+// }
   static List<User> getTestUsers(){
-    List<User> testUsers = [
-      User(Id: 1, firstName: 'Aaron',email: 'aaron@gmail.com',password: '123456', mobile: '26262626', status: 'Active', address1: new Address(streetName: 'thomastown',city: 'thom', state: 'vic' , postCode: '3074')),
-
-      User(Id: 2, firstName: 'Aron',email: 'arron@gmail.com',password: '123456', mobile: '123456798', status: 'Active', address1: new Address(streetName: 'sydney road',city: 'brunswick', state: 'vic' , postCode: '3011')),
-      User(Id: 3, firstName: 'Baron',email: 'baron@gmail.com',password: '123456', mobile: '159573456', status: 'Active', address1: new Address(streetName: 'tottenham',city: 'tottenham', state: 'vic' , postCode: '2589')),
-      User(Id: 4, firstName: 'Maron',email: 'maron@gmail.com',password: '123456', mobile: '46579813', status: 'Inactive', address1: new Address(streetName: 'flinders',city: 'CBD', state: 'vic' , postCode: '3626')),
-
-    ];
+    List<User> testUsers = [    ];
     return testUsers;
-}
+  }
+
 
   static List<User> getTestUsers2(){
     List<User> testUsers2 = [

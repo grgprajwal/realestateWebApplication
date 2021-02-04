@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:realstate/Model/Owner.dart';
+import 'package:realstate/Utility/realestate_preferences.dart';
 import 'package:realstate/View/Widgets/Agent/AgentNavigationBar.dart';
 import 'package:realstate/routing_constants.dart';
 
@@ -22,6 +23,19 @@ class _EditOwnerState extends State<EditOwner> {
 
   final _addAgentKey = GlobalKey<FormState>();
 
+  String _username;
+
+  _EditOwnerState(){
+    _getUsername().then((val) => setState(() {
+      _username = val;
+    }));
+
+  }
+
+  Future<String> _getUsername() async {
+    return await RealEstatePreferences.getUserName();
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context);
@@ -40,7 +54,7 @@ class _EditOwnerState extends State<EditOwner> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  AgentNavigationBar(username: 'prajwal'),
+                  AgentNavigationBar(username:_username),
                   Padding(
                     padding: EdgeInsets.fromLTRB(50, 60, 50, 0),
                     child: SizedBox(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:realstate/Controller/hover_extension.dart';
+import 'package:realstate/Utility/realestate_preferences.dart';
 
 import '../../../company_constant.dart';
 import '../../../routing_constants.dart';
@@ -36,19 +37,28 @@ class AdminNavigationBar extends StatelessWidget {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center              ,
+              crossAxisAlignment: CrossAxisAlignment.baseline ,
+              textBaseline: TextBaseline.ideographic,
               children: <Widget>[
-                Text(CompanyName,
-                  textAlign: TextAlign.left,
-                  textScaleFactor: 2,),
+                Row(
+                  children: [SizedBox(child:Image.asset('images/logo.png') ,),
+                  SizedBox(width: 20,),
+
+                  Text(CompanyName,
+                    textAlign: TextAlign.left,
+                    textScaleFactor: 2, ),
+                ],
+                ),
+
 
                 TextButton.icon(
                   icon: const Icon(Icons.supervised_user_circle, size: 35, color: Colors.black,),
-                  label: Text('$username', style: TextStyle(color: Colors.black),),
+                  label: Text('${username}', style: TextStyle(color: Colors.black),),
                   onPressed: (){},
 
                 ),
                 TextButton(onPressed: (){
+                  RealEstatePreferences.clearAllPreferences();
                   Navigator.pushNamed(context, LoginHomePage );
                 },
                     child: Text('Logout', style: TextStyle(color: Colors.black),
@@ -75,7 +85,7 @@ class AdminNavigationBar extends StatelessWidget {
                 child: Text('HOME' , style: TextStyle(fontSize: textSize,color: Colors.black)),
                 onPressed: (
                     ){
-                  Navigator.pushNamed(context, AdminHomePage );
+                  Navigator.pushNamed(context, AdminHomePage);
 
                 },
               ),

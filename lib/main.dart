@@ -17,13 +17,13 @@ class RealState extends StatelessWidget {
       onGenerateRoute: router.generateRoute,
       // initialRoute: LoginHomePage,
       // initialRoute: AdminHomePage,
-      initialRoute: PropertyListPage,
+      // initialRoute: PropertyListPage,
 
       // initialRoute: OwnerListPage,
 
       // initialRoute: ForgetPasswordPage,
 
-      // initialRoute: AgentHomePage,
+      initialRoute: AgentHomePage,
 
     );
   }
